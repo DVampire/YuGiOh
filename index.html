@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏王卡片展示</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-dragon"></i>
+                    游戏王卡片展示
+                </h1>
+                <p class="subtitle">探索游戏王的奇妙世界</p>
+            </div>
+        </header>
+
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="搜索卡片名称..." class="search-input">
+                    <button id="clearSearch" class="clear-btn" style="display: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="filters">
+                    <select id="typeFilter" class="filter-select">
+                        <option value="">所有类型</option>
+                        <option value="Normal Monster">普通怪兽</option>
+                        <option value="Effect Monster">效果怪兽</option>
+                        <option value="Spell Card">魔法卡</option>
+                        <option value="Trap Card">陷阱卡</option>
+                        <option value="Fusion Monster">融合怪兽</option>
+                        <option value="Synchro Monster">同调怪兽</option>
+                        <option value="XYZ Monster">XYZ怪兽</option>
+                        <option value="Link Monster">连接怪兽</option>
+                    </select>
+                    
+                    <select id="raceFilter" class="filter-select">
+                        <option value="">所有种族</option>
+                    </select>
+                    
+                    <select id="archetypeFilter" class="filter-select">
+                        <option value="">所有系列</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <span id="cardCount" class="stat-item">
+                    <i class="fas fa-cards-blank"></i>
+                    总卡片数: <span id="totalCards">0</span>
+                </span>
+                <span id="filteredCount" class="stat-item">
+                    <i class="fas fa-filter"></i>
+                    显示: <span id="filteredCards">0</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在加载卡片数据...</p>
+        </div>
+
+        <div class="cards-container" id="cardsContainer">
+            <!-- 卡片将在这里动态生成 -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3>没有找到匹配的卡片</h3>
+            <p>尝试调整搜索条件或筛选器</p>
+        </div>
+
+        <div class="pagination" id="pagination">
+            <button id="prevPage" class="page-btn" disabled>
+                <i class="fas fa-chevron-left"></i>
+                上一页
+            </button>
+            <span class="page-info">
+                第 <span id="currentPage">1</span> 页，共 <span id="totalPages">1</span> 页
+            </span>
+            <button id="nextPage" class="page-btn">
+                下一页
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 卡片详情模态框 -->
+    <div class="modal" id="cardModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-body">
+                <div class="card-detail">
+                    <div class="card-image">
+                        <img id="modalCardImage" src="" alt="卡片图片">
+                    </div>
+                    <div class="card-info">
+                        <h2 id="modalCardName"></h2>
+                        <div class="card-meta">
+                            <span class="card-type" id="modalCardType"></span>
+                            <span class="card-race" id="modalCardRace"></span>
+                            <span class="card-archetype" id="modalCardArchetype"></span>
+                        </div>
+                        <div class="card-stats" id="modalCardStats">
+                            <!-- 卡片属性将在这里显示 -->
+                        </div>
+                        <div class="card-description">
+                            <h3>卡片描述</h3>
+                            <p id="modalCardDesc"></p>
+                        </div>
+                        <div class="card-sets" id="modalCardSets">
+                            <!-- 卡片系列信息将在这里显示 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
