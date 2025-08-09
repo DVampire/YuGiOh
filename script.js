@@ -3,6 +3,93 @@ let allCards = [];
 let filteredCards = [];
 let currentPage = 1;
 const cardsPerPage = 20;
+let currentLanguage = 'zh'; // 默认中文
+
+// 国际化文本
+const i18n = {
+    zh: {
+        title: '游戏王卡片展示',
+        subtitle: '探索游戏王的奇妙世界',
+        searchPlaceholder: '搜索卡片名称...',
+        allTypes: '所有类型',
+        normalMonster: '普通怪兽',
+        effectMonster: '效果怪兽',
+        spellCard: '魔法卡',
+        trapCard: '陷阱卡',
+        fusionMonster: '融合怪兽',
+        synchroMonster: '同调怪兽',
+        xyzMonster: 'XYZ怪兽',
+        linkMonster: '连接怪兽',
+        allRaces: '所有种族',
+        allArchetypes: '所有系列',
+        totalCards: '总卡片数',
+        showing: '显示',
+        loading: '正在加载卡片数据...',
+        noResultsTitle: '没有找到匹配的卡片',
+        noResultsDesc: '尝试调整搜索条件或筛选器',
+        prevPage: '上一页',
+        nextPage: '下一页',
+        pageInfo: '第',
+        pageOf: '页，共',
+        pageTotal: '页',
+        cardDescription: '卡片描述',
+        attack: '攻击力',
+        defense: '防御力',
+        level: '等级',
+        linkValue: '连接值',
+        noStats: '无属性数据',
+        noDescription: '无描述',
+        cardSets: '卡片系列',
+        noSetInfo: '无系列信息',
+        setCode: '编号',
+        rarity: '稀有度',
+        price: '价格',
+        unknownType: '未知类型',
+        noRace: '无种族',
+        noArchetype: '无系列'
+    },
+    en: {
+        title: 'Yu-Gi-Oh! Card Gallery',
+        subtitle: 'Explore the amazing world of Yu-Gi-Oh!',
+        searchPlaceholder: 'Search card names...',
+        allTypes: 'All Types',
+        normalMonster: 'Normal Monster',
+        effectMonster: 'Effect Monster',
+        spellCard: 'Spell Card',
+        trapCard: 'Trap Card',
+        fusionMonster: 'Fusion Monster',
+        synchroMonster: 'Synchro Monster',
+        xyzMonster: 'XYZ Monster',
+        linkMonster: 'Link Monster',
+        allRaces: 'All Races',
+        allArchetypes: 'All Archetypes',
+        totalCards: 'Total Cards',
+        showing: 'Showing',
+        loading: 'Loading card data...',
+        noResultsTitle: 'No matching cards found',
+        noResultsDesc: 'Try adjusting your search criteria or filters',
+        prevPage: 'Previous',
+        nextPage: 'Next',
+        pageInfo: 'Page',
+        pageOf: 'of',
+        pageTotal: '',
+        cardDescription: 'Card Description',
+        attack: 'ATK',
+        defense: 'DEF',
+        level: 'Level',
+        linkValue: 'Link Value',
+        noStats: 'No stats data',
+        noDescription: 'No description',
+        cardSets: 'Card Sets',
+        noSetInfo: 'No set information',
+        setCode: 'Code',
+        rarity: 'Rarity',
+        price: 'Price',
+        unknownType: 'Unknown Type',
+        noRace: 'No Race',
+        noArchetype: 'No Archetype'
+    }
+};
 
 // DOM 元素
 const searchInput = document.getElementById('searchInput');
@@ -21,12 +108,74 @@ const prevPageBtn = document.getElementById('prevPage');
 const nextPageBtn = document.getElementById('nextPage');
 const cardModal = document.getElementById('cardModal');
 const closeModal = document.querySelector('.close');
+const langBtn = document.getElementById('langBtn');
+const langDropdown = document.getElementById('langDropdown');
+const currentLangSpan = document.getElementById('currentLang');
 
 // 初始化应用
 document.addEventListener('DOMContentLoaded', function() {
+    // 从本地存储加载语言设置
+    const savedLang = localStorage.getItem('language') || 'zh';
+    setLanguage(savedLang);
+    
     loadCards();
     setupEventListeners();
 });
+
+// 设置语言
+function setLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('language', lang);
+    
+    // 更新语言按钮显示
+    currentLangSpan.textContent = lang === 'zh' ? '中文' : 'English';
+    
+    // 更新所有带有 data-i18n 属性的元素
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (i18n[lang][key]) {
+            element.textContent = i18n[lang][key];
+        }
+    });
+    
+    // 更新占位符文本
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (i18n[lang][key]) {
+            element.placeholder = i18n[lang][key];
+        }
+    });
+    
+    // 更新筛选器选项
+    updateFilterOptions();
+    
+    // 更新模态框内容（如果打开的话）
+    if (cardModal.style.display === 'block') {
+        updateModalContent();
+    }
+}
+
+// 更新筛选器选项
+function updateFilterOptions() {
+    // 更新类型筛选器
+    typeFilter.querySelectorAll('option').forEach(option => {
+        const key = option.getAttribute('data-i18n');
+        if (key && i18n[currentLanguage][key]) {
+            option.textContent = i18n[currentLanguage][key];
+        }
+    });
+    
+    // 更新种族和系列筛选器的默认选项
+    const raceDefaultOption = raceFilter.querySelector('option[value=""]');
+    const archetypeDefaultOption = archetypeFilter.querySelector('option[value=""]');
+    
+    if (raceDefaultOption) {
+        raceDefaultOption.textContent = i18n[currentLanguage].allRaces;
+    }
+    if (archetypeDefaultOption) {
+        archetypeDefaultOption.textContent = i18n[currentLanguage].allArchetypes;
+    }
+}
 
 // 加载卡片数据
 async function loadCards() {
@@ -109,6 +258,33 @@ function setupEventListeners() {
             closeCardModal();
         }
     });
+    
+    // 语言切换
+    langBtn.addEventListener('click', toggleLanguageDropdown);
+    
+    // 语言选项点击
+    langDropdown.addEventListener('click', (e) => {
+        const langOption = e.target.closest('.lang-option');
+        if (langOption) {
+            const lang = langOption.getAttribute('data-lang');
+            setLanguage(lang);
+            toggleLanguageDropdown();
+        }
+    });
+    
+    // 点击外部关闭语言下拉菜单
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.language-switcher')) {
+            langDropdown.classList.remove('show');
+            langBtn.classList.remove('active');
+        }
+    });
+}
+
+// 切换语言下拉菜单
+function toggleLanguageDropdown() {
+    langDropdown.classList.toggle('show');
+    langBtn.classList.toggle('active');
 }
 
 // 防抖函数
@@ -283,47 +459,56 @@ function showCardModal(card) {
     
     // 设置基本信息
     modalCardName.textContent = card.name;
-    modalCardType.textContent = card.type || '未知类型';
-    modalCardRace.textContent = card.race || '无种族';
-    modalCardArchetype.textContent = card.archetype || '无系列';
+    modalCardType.textContent = card.type || i18n[currentLanguage].unknownType;
+    modalCardRace.textContent = card.race || i18n[currentLanguage].noRace;
+    modalCardArchetype.textContent = card.archetype || i18n[currentLanguage].noArchetype;
     
     // 设置卡片属性
-    let statsHTML = '<h3>卡片属性</h3>';
+    let statsHTML = `<h3>${i18n[currentLanguage].cardDescription}</h3>`;
     if (card.atk || card.def || card.level || card.linkval) {
-        if (card.atk) statsHTML += `<div class="stat-row"><span>攻击力:</span> <span>${card.atk}</span></div>`;
-        if (card.def) statsHTML += `<div class="stat-row"><span>防御力:</span> <span>${card.def}</span></div>`;
-        if (card.level) statsHTML += `<div class="stat-row"><span>等级:</span> <span>${card.level}</span></div>`;
-        if (card.linkval) statsHTML += `<div class="stat-row"><span>连接值:</span> <span>${card.linkval}</span></div>`;
+        if (card.atk) statsHTML += `<div class="stat-row"><span>${i18n[currentLanguage].attack}:</span> <span>${card.atk}</span></div>`;
+        if (card.def) statsHTML += `<div class="stat-row"><span>${i18n[currentLanguage].defense}:</span> <span>${card.def}</span></div>`;
+        if (card.level) statsHTML += `<div class="stat-row"><span>${i18n[currentLanguage].level}:</span> <span>${card.level}</span></div>`;
+        if (card.linkval) statsHTML += `<div class="stat-row"><span>${i18n[currentLanguage].linkValue}:</span> <span>${card.linkval}</span></div>`;
     } else {
-        statsHTML += '<div class="stat-row"><span>无属性数据</span></div>';
+        statsHTML += `<div class="stat-row"><span>${i18n[currentLanguage].noStats}</span></div>`;
     }
     modalCardStats.innerHTML = statsHTML;
     
     // 设置卡片描述
-    modalCardDesc.textContent = card.desc || '无描述';
+    modalCardDesc.textContent = card.desc || i18n[currentLanguage].noDescription;
     
     // 设置卡片系列信息
     if (card.card_sets && card.card_sets.length > 0) {
-        let setsHTML = '<h3>卡片系列</h3>';
+        let setsHTML = `<h3>${i18n[currentLanguage].cardSets}</h3>`;
         card.card_sets.forEach(set => {
             setsHTML += `
                 <div class="set-item">
                     <div class="set-name">${set.set_name}</div>
                     <div class="set-details">
-                        编号: ${set.set_code} | 稀有度: ${set.set_rarity} ${set.set_rarity_code}
-                        ${set.set_price && set.set_price !== '0' ? ` | 价格: $${set.set_price}` : ''}
+                        ${i18n[currentLanguage].setCode}: ${set.set_code} | ${i18n[currentLanguage].rarity}: ${set.set_rarity} ${set.set_rarity_code}
+                        ${set.set_price && set.set_price !== '0' ? ` | ${i18n[currentLanguage].price}: $${set.set_price}` : ''}
                     </div>
                 </div>
             `;
         });
         modalCardSets.innerHTML = setsHTML;
     } else {
-        modalCardSets.innerHTML = '<h3>卡片系列</h3><div class="set-item">无系列信息</div>';
+        modalCardSets.innerHTML = `<h3>${i18n[currentLanguage].cardSets}</h3><div class="set-item">${i18n[currentLanguage].noSetInfo}</div>`;
     }
     
     // 显示模态框
     cardModal.style.display = 'block';
     document.body.style.overflow = 'hidden';
+}
+
+// 更新模态框内容（用于语言切换时）
+function updateModalContent() {
+    // 如果模态框是打开的，重新显示当前卡片
+    if (cardModal.style.display === 'block') {
+        // 这里需要保存当前显示的卡片信息，暂时简化处理
+        // 在实际应用中，你可能需要保存当前卡片的引用
+    }
 }
 
 // 关闭卡片详情模态框

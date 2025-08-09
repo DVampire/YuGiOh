@@ -1,6 +1,6 @@
 # 游戏王卡片展示网页
 
-一个现代化的游戏王卡片展示网页，可以浏览、搜索和筛选游戏王卡片数据。
+一个现代化的游戏王卡片展示网页，可以浏览、搜索和筛选游戏王卡片数据，并支持中英文切换与后端静态服务。
 
 ## 功能特性
 
@@ -11,6 +11,7 @@
 - 📄 **分页浏览**: 每页显示20张卡片，支持翻页
 - 🔍 **详情查看**: 点击卡片查看详细信息
 - ⌨️ **键盘导航**: 支持键盘快捷键操作
+ - 🌍 **语言切换**: 支持中文/English 实时切换（右上角地球图标）
 
 ## 文件结构
 
@@ -18,18 +19,52 @@
 YuGiOh/
 ├── index.html          # 主页面
 ├── styles.css          # 样式文件
-├── script.js           # JavaScript逻辑
-├── card.json           # 卡片数据文件
+├── script.js           # 前端逻辑（含中英切换）
+├── card.json           # 卡片数据（较大文件）
+├── server.py           # FastAPI 静态服务
+├── requirements.txt    # 依赖列表（fastapi/uvicorn/gunicorn）
 └── README.md           # 说明文档
 ```
 
 ## 使用方法
 
-1. 确保 `card.json` 文件在同一目录下
-2. 在浏览器中打开 `index.html` 文件
-3. 等待卡片数据加载完成
-4. 使用搜索框和筛选器来查找特定卡片
-5. 点击卡片查看详细信息
+由于浏览器的安全策略，直接用文件协议打开 `index.html` 可能无法通过 `fetch` 读取本地 `card.json`。推荐使用内置 FastAPI 静态服务器或任意本地 HTTP 服务器。
+
+### 方式一：FastAPI（推荐）
+
+1) 安装依赖
+
+```
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+2) 开发启动（热重载，端口 8000）
+
+```
+uvicorn server:app --reload --host 0.0.0.0 --port 8000
+```
+
+3) 生产方式（gunicorn + uvicorn worker，端口 8001）
+
+```
+gunicorn -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8001 server:app
+```
+
+4) 访问
+
+- 开发: http://localhost:8000
+- 生产: http://localhost:8001
+
+### 方式二：简单本地服务器
+
+也可以使用 Python 自带服务器（不支持缓存头等高级特性）：
+
+```
+python3 -m http.server 8000
+```
+
+访问: http://localhost:8000
 
 ## 技术特性
 
@@ -38,6 +73,12 @@ YuGiOh/
 - **性能优化**: 防抖搜索、分页加载
 - **用户体验**: 加载动画、错误处理、键盘导航
 - **响应式设计**: 适配各种屏幕尺寸
+ - **后端静态服务**: 使用 FastAPI/Starlette 提供静态文件，包含合理的缓存策略
+
+## 语言切换
+
+- 右上角点击地球图标可在「中文 / English」之间切换
+- 选择会自动保存在浏览器本地，下次打开沿用该语言
 
 ## 浏览器兼容性
 

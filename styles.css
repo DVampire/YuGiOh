@@ -82,6 +82,99 @@ body {
     z-index: -1;
 }
 
+/* 语言切换器样式 */
+.header-top {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.language-switcher {
+    position: relative;
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    color: #4a5568;
+    backdrop-filter: blur(10px);
+}
+
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.lang-btn i:last-child {
+    transition: transform 0.3s ease;
+}
+
+.lang-btn.active i:last-child {
+    transform: rotate(180deg);
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    min-width: 140px;
+}
+
+.lang-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.lang-option:last-child {
+    border-bottom: none;
+}
+
+.lang-option:hover {
+    background: #f8fafc;
+    color: #667eea;
+}
+
+.lang-option.active {
+    background: #667eea;
+    color: white;
+}
+
+.flag {
+    font-size: 1.2rem;
+}
+
 .title {
     font-size: 3.5rem;
     font-weight: 800;
@@ -733,6 +826,20 @@ body {
         font-size: 2rem;
     }
     
+    .header-top {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .lang-btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .lang-dropdown {
+        min-width: 120px;
+    }
+    
     .search-container {
         gap: 15px;
     }
@@ -780,7 +887,29 @@ body {
         padding: 30px 20px;
     }
     
+    .header-top {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .lang-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .lang-btn span {
+        display: none;
+    }
+    
+    .lang-btn i:first-child {
+        margin-right: 0;
+    }
+    
     .search-section {
         padding: 20px;
+    }
+    
+    .title {
+        font-size: 1.8rem;
     }
 } 

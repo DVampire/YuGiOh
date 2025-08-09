@@ -12,11 +12,30 @@
     <div class="container">
         <header class="header">
             <div class="header-content">
+                <div class="header-top">
+                    <div class="language-switcher">
+                        <button id="langBtn" class="lang-btn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">中文</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <div class="lang-option" data-lang="zh">
+                                <span class="flag">🇨🇳</span>
+                                <span>中文</span>
+                            </div>
+                            <div class="lang-option" data-lang="en">
+                                <span class="flag">🇺🇸</span>
+                                <span>English</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <h1 class="title">
                     <i class="fas fa-dragon"></i>
-                    游戏王卡片展示
+                    <span data-i18n="title">游戏王卡片展示</span>
                 </h1>
-                <p class="subtitle">探索游戏王的奇妙世界</p>
+                <p class="subtitle" data-i18n="subtitle">探索游戏王的奇妙世界</p>
             </div>
         </header>
 
@@ -24,7 +43,7 @@
             <div class="search-container">
                 <div class="search-box">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="searchInput" placeholder="搜索卡片名称..." class="search-input">
+                    <input type="text" id="searchInput" placeholder="搜索卡片名称..." class="search-input" data-i18n-placeholder="searchPlaceholder">
                     <button id="clearSearch" class="clear-btn" style="display: none;">
                         <i class="fas fa-times"></i>
                     </button>
@@ -32,23 +51,23 @@
                 
                 <div class="filters">
                     <select id="typeFilter" class="filter-select">
-                        <option value="">所有类型</option>
-                        <option value="Normal Monster">普通怪兽</option>
-                        <option value="Effect Monster">效果怪兽</option>
-                        <option value="Spell Card">魔法卡</option>
-                        <option value="Trap Card">陷阱卡</option>
-                        <option value="Fusion Monster">融合怪兽</option>
-                        <option value="Synchro Monster">同调怪兽</option>
-                        <option value="XYZ Monster">XYZ怪兽</option>
-                        <option value="Link Monster">连接怪兽</option>
+                        <option value="" data-i18n="allTypes">所有类型</option>
+                        <option value="Normal Monster" data-i18n="normalMonster">普通怪兽</option>
+                        <option value="Effect Monster" data-i18n="effectMonster">效果怪兽</option>
+                        <option value="Spell Card" data-i18n="spellCard">魔法卡</option>
+                        <option value="Trap Card" data-i18n="trapCard">陷阱卡</option>
+                        <option value="Fusion Monster" data-i18n="fusionMonster">融合怪兽</option>
+                        <option value="Synchro Monster" data-i18n="synchroMonster">同调怪兽</option>
+                        <option value="XYZ Monster" data-i18n="xyzMonster">XYZ怪兽</option>
+                        <option value="Link Monster" data-i18n="linkMonster">连接怪兽</option>
                     </select>
                     
                     <select id="raceFilter" class="filter-select">
-                        <option value="">所有种族</option>
+                        <option value="" data-i18n="allRaces">所有种族</option>
                     </select>
                     
                     <select id="archetypeFilter" class="filter-select">
-                        <option value="">所有系列</option>
+                        <option value="" data-i18n="allArchetypes">所有系列</option>
                     </select>
                 </div>
             </div>
@@ -56,18 +75,18 @@
             <div class="stats">
                 <span id="cardCount" class="stat-item">
                     <i class="fas fa-cards-blank"></i>
-                    总卡片数: <span id="totalCards">0</span>
+                    <span data-i18n="totalCards">总卡片数</span>: <span id="totalCards">0</span>
                 </span>
                 <span id="filteredCount" class="stat-item">
                     <i class="fas fa-filter"></i>
-                    显示: <span id="filteredCards">0</span>
+                    <span data-i18n="showing">显示</span>: <span id="filteredCards">0</span>
                 </span>
             </div>
         </div>
 
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>正在加载卡片数据...</p>
+            <p data-i18n="loading">正在加载卡片数据...</p>
         </div>
 
         <div class="cards-container" id="cardsContainer">
@@ -76,20 +95,20 @@
 
         <div class="no-results" id="noResults" style="display: none;">
             <i class="fas fa-search"></i>
-            <h3>没有找到匹配的卡片</h3>
-            <p>尝试调整搜索条件或筛选器</p>
+            <h3 data-i18n="noResultsTitle">没有找到匹配的卡片</h3>
+            <p data-i18n="noResultsDesc">尝试调整搜索条件或筛选器</p>
         </div>
 
         <div class="pagination" id="pagination">
             <button id="prevPage" class="page-btn" disabled>
                 <i class="fas fa-chevron-left"></i>
-                上一页
+                <span data-i18n="prevPage">上一页</span>
             </button>
             <span class="page-info">
-                第 <span id="currentPage">1</span> 页，共 <span id="totalPages">1</span> 页
+                <span data-i18n="pageInfo">第</span> <span id="currentPage">1</span> <span data-i18n="pageOf">页，共</span> <span id="totalPages">1</span> <span data-i18n="pageTotal">页</span>
             </span>
             <button id="nextPage" class="page-btn">
-                下一页
+                <span data-i18n="nextPage">下一页</span>
                 <i class="fas fa-chevron-right"></i>
             </button>
         </div>
@@ -115,7 +134,7 @@
                             <!-- 卡片属性将在这里显示 -->
                         </div>
                         <div class="card-description">
-                            <h3>卡片描述</h3>
+                            <h3 data-i18n="cardDescription">卡片描述</h3>
                             <p id="modalCardDesc"></p>
                         </div>
                         <div class="card-sets" id="modalCardSets">
