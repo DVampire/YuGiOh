@@ -17,6 +17,11 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    # GitHub Pages 要求部署作业声明 environment: github-pages
+    # 并可选地把部署后的 URL 暴露出来
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
